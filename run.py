@@ -62,16 +62,16 @@ def validate_data(values):
     return True
 
 
-def update_sales_worksheet(data):
-    """
-    update sales worksheet, add new row with the list of data provided.
-    """
-    print("Updating the Sales worksheet.....\n")
-    sales_worksheet = SHEET.worksheet('sales')
-
-    sales_worksheet.append_row(data)
-
-    print("Sales worksheet updated successfully \n")
+# def update_sales_worksheet(data): have been refactored
+#    """
+#    update sales worksheet, add new row with the list of data provided.
+#   """
+#    print("Updating the Sales worksheet.....\n")
+#   sales_worksheet = SHEET.worksheet('sales')
+#
+#    sales_worksheet.append_row(data)
+#
+#    print("Sales worksheet updated successfully \n")
 
 
 def calculate_surplus_data(sales_row):
@@ -91,18 +91,49 @@ def calculate_surplus_data(sales_row):
     
     return surplus_data
 
-def update_surplus_worksheet(surplus_data):
+#def update_surplus_worksheet(surplus_data): have been refactored
+#    """
+#    update surplus worksheet, add new row with the list of data calculated 
+#    from calculate_surplus_data function.
+#    """
+#
+#    print("Updating the Surplus worksheet.....\n")
+#
+#   surplus_worksheet = SHEET.worksheet('surplus')
+#    surplus_worksheet.append_row(surplus_data)
+#
+#    print("surplus worksheet updated successfully. \n")
+
+def update_worksheet(data, worksheet):
     """
-    update surplus worksheet, add new row with the list of data calculated 
-    from calculate_surplus_data function.
+    Received a list to be inserted into a worksheet
+    update the relevant worksheet with the data provided
+    """
+    print(f"Updating the {worksheet} worksheet.....\n")
+
+    worksheet_to_update = SHEET.worksheet(worksheet)
+    worksheet_to_update.append_row(data)
+
+    print(f"{worksheet} worksheet updated successfully. \n")
+
+def get_last_5_entries_sales():
+    """
+    collects cols of data from sales worksheet, collecting the 
+    last 5 entries for each sandwich and returns the data
+    as a list of lists.
     """
 
-    print("Updating the Surplus worksheet.....\n")
+    sales = SHEET.worksheet('sales')
+    columns = []
 
-    surplus_worksheet = SHEET.worksheet('surplus')
-    surplus_worksheet.append_row(surplus_data)
+    for index in range(1,7):
+        column = sales.col_values(index)
+        columns.append(column[-5:])
+    pprint(columns)
 
-    print("surplus worksheet updated successfully. \n")
+    # column = sales.col_values(3)
+    # print(column)
+
 
 
 def main():
@@ -112,15 +143,12 @@ def main():
     """
     data = get_sales_data()
     sales_data = [int(num) for num in data]
-    update_sales_worksheet(sales_data)
+    update_worksheet(sales_data, 'sales')
     new_surplus_data = calculate_surplus_data(sales_data)
-    update_surplus_worksheet(new_surplus_data)
-
-
-
+    update_worksheet(new_surplus_data, 'surplus')
 
 
 print("Welcome... !\n ")
-main()
+# main()
 
-
+sales_columns = get_last_5_entries_sales()
